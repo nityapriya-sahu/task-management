@@ -3,42 +3,88 @@ import { CiHeart } from "react-icons/ci";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { IoAddCircleSharp } from "react-icons/io5";
+import { FaHeart } from "react-icons/fa";
 import InputData from "./InputData";
+import axios from "axios";
 
-const Cards = ({ home, setOpenModal }) => {
-  const data = [
-    {
-      title: "Projects",
-      desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
-      status: "Incomplete",
-    },
-    {
-      title: "Projects",
-      desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
-      status: "Incomplete",
-    },
-    {
-      title: "Projects",
-      desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
-      status: "Complete",
-    },
-    {
-      title: "Projects",
-      desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
-      status: "Incomplete",
-    },
-    {
-      title: "Projects",
-      desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
-      status: "Complete",
-    },
-    {
-      title: "Projects",
-      desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
-      status: "Incomplete",
-    },
-  ];
+const Cards = ({ home, setOpenModal, data, setUpdateData }) => {
+  // const data = [
+  //   {
+  //     title: "Projects",
+  //     desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
+  //     status: "Incomplete",
+  //   },
+  //   {
+  //     title: "Projects",
+  //     desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
+  //     status: "Incomplete",
+  //   },
+  //   {
+  //     title: "Projects",
+  //     desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
+  //     status: "Complete",
+  //   },
+  //   {
+  //     title: "Projects",
+  //     desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
+  //     status: "Incomplete",
+  //   },
+  //   {
+  //     title: "Projects",
+  //     desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
+  //     status: "Complete",
+  //   },
+  //   {
+  //     title: "Projects",
+  //     desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
+  //     status: "Incomplete",
+  //   },
+  // ];
 
+  const headers = {
+    id: localStorage.getItem("id"),
+    authorization: `Bearer ${localStorage.getItem("token")}`,
+  };
+  const handleCompleteTask = async (id) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:1000/api/v2/update-complete-task/${id}`,
+        {},
+        { headers }
+      );
+      alert(response.data.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleImportant = async (id) => {
+    try {
+      await axios.put(
+        `http://localhost:1000/api/v2/update-imp-task/${id}`,
+        {},
+        { headers }
+      );
+      // alert(response.data.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleUpdate = (id, title, desc) => {
+    setOpenModal(true);
+    setUpdateData({ id: id, title: title, desc: desc });
+  };
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:1000/api/v2/delete-task/${id}`,
+        { headers }
+      );
+      // console.log(response, "HJHJHJ");
+      alert(response.data.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="grid grid-cols-3 gap-4 p-4">
       {data &&
@@ -52,19 +98,31 @@ const Cards = ({ home, setOpenModal }) => {
               <div className="mt-4 w-full flex items-center justify-between">
                 <button
                   className={`${
-                    item.status === "Incomplete" ? "bg-red-400" : "bg-green-400"
+                    item.complete === false ? "bg-red-400" : "bg-green-400"
                   }  p-2 rounded`}
+                  onClick={() => handleCompleteTask(item._id)}
                 >
-                  {item.status}
+                  {item.complete === true ? "Complete" : "In-Complete"}
                 </button>
                 <div className="p-2 w-3/6 text-2xl flex justify-around">
-                  <button>
-                    <CiHeart />
+                  <button onClick={() => handleImportant(item._id)}>
+                    {item.important === false ? (
+                      <CiHeart />
+                    ) : (
+                      <FaHeart className="text-red-500" />
+                    )}
                   </button>
-                  <button>
-                    <FaEdit />
-                  </button>
-                  <button>
+                  {home !== false && (
+                    <button
+                      onClick={() =>
+                        handleUpdate(item._id, item.title, item.desc)
+                      }
+                    >
+                      <FaEdit />
+                    </button>
+                  )}
+
+                  <button onClick={() => handleDelete(item._id)}>
                     <MdDelete />
                   </button>
                 </div>
