@@ -1,7 +1,53 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 
-const InputData = ({ openModal, setOpenModal }) => {
+const InputData = ({ openModal, setOpenModal, updateData, setUpdateData }) => {
+  const [data, setData] = useState({ title: "", desc: "" });
+
+  useEffect(() => {
+    setData({ title: updateData.title, desc: updateData.desc });
+  }, [updateData]);
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value });
+  };
+  const headers = {
+    id: localStorage.getItem("id"),
+    authorization: `Bearer ${localStorage.getItem("token")}`,
+  };
+  const onSubmit = async () => {
+    if (data.title === "" || data.desc === "") {
+      alert("All fields are required");
+    } else {
+      await axios.post(`http://localhost:1000/api/v2/create-task`, data, {
+        headers,
+      });
+      setData({ title: "", desc: "" });
+      setOpenModal(false);
+    }
+  };
+  const onUpdate = async (id) => {
+    if (data.title === "" || data.desc === "") {
+      alert("All Fields are required");
+    } else {
+      await axios.put(
+        `http://localhost:1000/api/v2/update-task/${updateData.id}`,
+        data,
+        {
+          headers,
+        }
+      );
+      setUpdateData({
+        id: "",
+        title: "",
+        desc: "",
+      });
+      setData({ title: "", desc: "" });
+      setOpenModal(false);
+    }
+  };
   return (
     <>
       <div
@@ -20,6 +66,15 @@ const InputData = ({ openModal, setOpenModal }) => {
               className=" text-2xl"
               onClick={() => {
                 setOpenModal(false);
+                setData({
+                  title: "",
+                  desc: "",
+                });
+                setUpdateData({
+                  id: "",
+                  title: "",
+                  desc: "",
+                });
               }}
             >
               <RxCross2 />
@@ -31,18 +86,34 @@ const InputData = ({ openModal, setOpenModal }) => {
             placeholder="Title"
             name="title"
             className="px-3 py-2 rounded w-full bg-gray-700 my-3"
+            value={data.title}
+            onChange={onChange}
           />
           <textarea
-            name="description"
+            name="desc"
             id=""
             cols={30}
             rows={10}
             placeholder="Description.."
             className="px-3 py-2 rounded w-full bg-gray-700 my-3"
+            value={data.desc}
+            onChange={onChange}
           ></textarea>
-          <button className="px-3 py-2 bg-blue-400 rounded text-black text-xl font-semibold">
-            Submit
-          </button>
+          {updateData.id === "" ? (
+            <button
+              className="px-3 py-2 bg-blue-400 rounded text-black text-xl font-semibold"
+              onClick={onSubmit}
+            >
+              Submit
+            </button>
+          ) : (
+            <button
+              className="px-3 py-2 bg-blue-400 rounded text-black text-xl font-semibold"
+              onClick={onUpdate}
+            >
+              Update
+            </button>
+          )}
         </div>
       </div>
     </>
