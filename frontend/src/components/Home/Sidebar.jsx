@@ -48,7 +48,7 @@ const Sidebar = () => {
         "http://localhost:1000/api/v2/get-all-tasks",
         { headers }
       );
-      console.log(response.data.data, "RRRRRRR");
+      // console.log(response.data.data, "RRRRRRR");
       setData(response.data.data);
     };
     fetchData();
@@ -56,29 +56,27 @@ const Sidebar = () => {
   return (
     <>
       {data && (
-        <div className="gap-2">
+        <div className="gap-2 text-center md:text-left">
           <h2 className="font-bold">TASK MANAGEMENT</h2>
           <h4 className="text-gray-400">{data.email}</h4>
           <hr />
         </div>
       )}
-      <div>
+      <div className="mt-4">
         {iconData.map((item, ind) => {
           return (
-            <>
-              <Link
-                to={item.link}
-                key={ind}
-                className="flex flex-row gap-2 items-center hover:bg-gray-600 p-2 rounded transition-all duration-300 font-medium "
-              >
-                {item.icons}
-                {item.title}
-              </Link>
-            </>
+            <Link
+              to={item.link}
+              key={ind}
+              className="flex flex-row gap-2 items-center hover:bg-gray-600 p-2 rounded transition-all duration-300 font-medium "
+            >
+              {item.icons}
+              {item.title}
+            </Link>
           );
         })}
       </div>
-      <div className="">
+      <div className="mt-6">
         <button className="bg-gray-400 p-2 w-full rounded-lg" onClick={logout}>
           Log out
         </button>
