@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authActions } from "../store/auth";
 import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Login = () => {
   const onSubmit = async () => {
     try {
       if (data.username === "" || data.password === "") {
-        alert("All fields are required");
+        toast.error("All fields are required");
       } else {
         const response = await axios.post(
           "http://localhost:1000/api/v1/login",
@@ -35,7 +36,7 @@ const Login = () => {
       }
     } catch (error) {
       console.log(error);
-      alert(error.response.data.message);
+      toast.error(error.response.data.message);
     }
   };
   return (

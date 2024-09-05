@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const history = useNavigate();
@@ -18,7 +19,7 @@ const Signup = () => {
 
   const onSubmit = async () => {
     if (data.username === "" || data.email === "" || data.password === "") {
-      alert("All fields are required");
+      toast.error("All fields are required");
     } else {
       try {
         const response = await axios.post(
@@ -28,11 +29,11 @@ const Signup = () => {
         console.log(response, "RSRSRSR");
         setData({ username: "", email: "", password: "" });
         history("/login");
-        alert(response.data.message);
+        toast.success(response.data.message);
       } catch (error) {
         console.log(error.response.data);
         setData({ username: "", email: "", password: "" });
-        alert(error.response.data.message);
+        toast.error(error.response.data.message);
       }
     }
   };

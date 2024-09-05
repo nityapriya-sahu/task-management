@@ -6,6 +6,7 @@ import { IoAddCircleSharp } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa";
 import InputData from "./InputData";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const Cards = ({ home, setOpenModal, data, setUpdateData }) => {
   // const data = [
@@ -52,8 +53,9 @@ const Cards = ({ home, setOpenModal, data, setUpdateData }) => {
         {},
         { headers }
       );
-      alert(response.data.message);
+      toast.success(response.data.message);
     } catch (error) {
+      toast.error("Failed to update task.");
       console.log(error);
     }
   };
@@ -66,6 +68,7 @@ const Cards = ({ home, setOpenModal, data, setUpdateData }) => {
       );
       // alert(response.data.message);
     } catch (error) {
+      toast.error("Failed to mark task as important.");
       console.log(error);
     }
   };
@@ -80,10 +83,36 @@ const Cards = ({ home, setOpenModal, data, setUpdateData }) => {
         { headers }
       );
       // console.log(response, "HJHJHJ");
-      alert(response.data.message);
+      toast.success(response.data.message);
     } catch (error) {
+      toast.error("Failed to delete task.");
       console.log(error);
     }
+  };
+  // Delete confirm box
+  const confirmDelete = (id) => {
+    toast((t) => (
+      <div>
+        <p>Are you sure you want to delete this task?</p>
+        <div className="flex justify-end gap-2 mt-2">
+          <button
+            className="bg-red-500 text-white px-3 py-1 rounded"
+            onClick={() => {
+              handleDelete(id);
+              toast.dismiss(t.id); // Close the toast after confirming
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="bg-gray-300 text-black px-3 py-1 rounded"
+            onClick={() => toast.dismiss(t.id)} // Close the toast without confirming
+          >
+            No
+          </button>
+        </div>
+      </div>
+    ));
   };
   return (
     <div className="grid grid-cols-3 gap-4 p-4">
@@ -122,7 +151,7 @@ const Cards = ({ home, setOpenModal, data, setUpdateData }) => {
                     </button>
                   )}
 
-                  <button onClick={() => handleDelete(item._id)}>
+                  <button onClick={() => confirmDelete(item._id)}>
                     <MdDelete />
                   </button>
                 </div>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
+import toast from "react-hot-toast";
 
 const InputData = ({ openModal, setOpenModal, updateData, setUpdateData }) => {
   const [data, setData] = useState({ title: "", desc: "" });
@@ -19,7 +20,7 @@ const InputData = ({ openModal, setOpenModal, updateData, setUpdateData }) => {
   };
   const onSubmit = async () => {
     if (data.title === "" || data.desc === "") {
-      alert("All fields are required");
+      toast.error("All fields are required");
     } else {
       await axios.post(`http://localhost:1000/api/v2/create-task`, data, {
         headers,
@@ -30,7 +31,7 @@ const InputData = ({ openModal, setOpenModal, updateData, setUpdateData }) => {
   };
   const onUpdate = async (id) => {
     if (data.title === "" || data.desc === "") {
-      alert("All Fields are required");
+      toast.error("All Fields are required");
     } else {
       await axios.put(
         `http://localhost:1000/api/v2/update-task/${updateData.id}`,
