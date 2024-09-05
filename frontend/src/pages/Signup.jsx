@@ -26,12 +26,11 @@ const Signup = () => {
           "http://localhost:1000/api/v1/sign-in",
           data
         );
-        console.log(response, "RSRSRSR");
+        // console.log(response, "RSRSRSR");
         setData({ username: "", email: "", password: "" });
         history("/login");
         toast.success(response.data.message);
       } catch (error) {
-        console.log(error.response.data);
         setData({ username: "", email: "", password: "" });
         toast.error(error.response.data.message);
       }
@@ -39,7 +38,7 @@ const Signup = () => {
   };
   return (
     <div className="h-[98vh] flex justify-center items-center">
-      <div className="p-4 w-2/6 rounded bg-gray-800">
+      <div className="p-4 rounded bg-gray-800">
         <div className="text-2xl font-semibold">Signup</div>
         <input
           type="username"

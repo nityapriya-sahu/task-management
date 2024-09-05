@@ -27,7 +27,7 @@ const Login = () => {
           "http://localhost:1000/api/v1/login",
           data
         );
-        console.log(response, "NHNHNH");
+        // console.log(response, "NHNHNH");
         setData({ username: "", password: "" });
         localStorage.setItem("id", response.data.id);
         localStorage.setItem("token", response.data.token);
@@ -35,13 +35,12 @@ const Login = () => {
         history("/");
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message);
     }
   };
   return (
     <div className="h-[98vh] flex justify-center items-center">
-      <div className="p-4 w-2/6 rounded bg-gray-800">
+      <div className="p-4 rounded bg-gray-800">
         <div className="text-2xl font-semibold">Login</div>
         <input
           type="username"

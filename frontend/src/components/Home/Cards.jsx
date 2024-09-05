@@ -1,47 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { CiHeart } from "react-icons/ci";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { IoAddCircleSharp } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa";
-import InputData from "./InputData";
 import axios from "axios";
 import toast from "react-hot-toast";
 
 const Cards = ({ home, setOpenModal, data, setUpdateData }) => {
-  // const data = [
-  //   {
-  //     title: "Projects",
-  //     desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
-  //     status: "Incomplete",
-  //   },
-  //   {
-  //     title: "Projects",
-  //     desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
-  //     status: "Incomplete",
-  //   },
-  //   {
-  //     title: "Projects",
-  //     desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
-  //     status: "Complete",
-  //   },
-  //   {
-  //     title: "Projects",
-  //     desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
-  //     status: "Incomplete",
-  //   },
-  //   {
-  //     title: "Projects",
-  //     desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
-  //     status: "Complete",
-  //   },
-  //   {
-  //     title: "Projects",
-  //     desc: "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
-  //     status: "Incomplete",
-  //   },
-  // ];
-
   const headers = {
     id: localStorage.getItem("id"),
     authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -56,7 +22,6 @@ const Cards = ({ home, setOpenModal, data, setUpdateData }) => {
       toast.success(response.data.message);
     } catch (error) {
       toast.error("Failed to update task.");
-      console.log(error);
     }
   };
   const handleImportant = async (id) => {
@@ -69,7 +34,6 @@ const Cards = ({ home, setOpenModal, data, setUpdateData }) => {
       // alert(response.data.message);
     } catch (error) {
       toast.error("Failed to mark task as important.");
-      console.log(error);
     }
   };
   const handleUpdate = (id, title, desc) => {
@@ -86,7 +50,6 @@ const Cards = ({ home, setOpenModal, data, setUpdateData }) => {
       toast.success(response.data.message);
     } catch (error) {
       toast.error("Failed to delete task.");
-      console.log(error);
     }
   };
   // Delete confirm box
@@ -115,49 +78,50 @@ const Cards = ({ home, setOpenModal, data, setUpdateData }) => {
     ));
   };
   return (
-    <div className="grid grid-cols-3 gap-4 p-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
       {data &&
         data.map((item, ind) => (
-          <>
-            <div className="flex flex-col justify-between bg-gray-800 rounded-sm p-4">
-              <div className="">
-                <h3 className="text-xl font-semibold">{item.title}</h3>
-                <p className="text-gray-300 my-2">{item.desc}</p>
-              </div>
-              <div className="mt-4 w-full flex items-center justify-between">
-                <button
-                  className={`${
-                    item.complete === false ? "bg-red-400" : "bg-green-400"
-                  }  p-2 rounded`}
-                  onClick={() => handleCompleteTask(item._id)}
-                >
-                  {item.complete === true ? "Complete" : "In-Complete"}
-                </button>
-                <div className="p-2 w-3/6 text-2xl flex justify-around">
-                  <button onClick={() => handleImportant(item._id)}>
-                    {item.important === false ? (
-                      <CiHeart />
-                    ) : (
-                      <FaHeart className="text-red-500" />
-                    )}
-                  </button>
-                  {home !== false && (
-                    <button
-                      onClick={() =>
-                        handleUpdate(item._id, item.title, item.desc)
-                      }
-                    >
-                      <FaEdit />
-                    </button>
+          <div
+            key={ind}
+            className="flex flex-col justify-between bg-gray-800 rounded-sm p-4"
+          >
+            <div className="">
+              <h3 className="text-xl font-semibold">{item.title}</h3>
+              <p className="text-gray-300 my-2">{item.desc}</p>
+            </div>
+            <div className="mt-4 w-full flex items-center justify-between">
+              <button
+                className={`${
+                  item.complete === false ? "bg-red-400" : "bg-green-400"
+                }  p-2 rounded`}
+                onClick={() => handleCompleteTask(item._id)}
+              >
+                {item.complete === true ? "Complete" : "Incomplete"}
+              </button>
+              <div className="p-2 w-full sm:w-3/6 text-2xl flex justify-around">
+                <button onClick={() => handleImportant(item._id)}>
+                  {item.important === false ? (
+                    <CiHeart />
+                  ) : (
+                    <FaHeart className="text-red-500" />
                   )}
-
-                  <button onClick={() => confirmDelete(item._id)}>
-                    <MdDelete />
+                </button>
+                {home !== false && (
+                  <button
+                    onClick={() =>
+                      handleUpdate(item._id, item.title, item.desc)
+                    }
+                  >
+                    <FaEdit />
                   </button>
-                </div>
+                )}
+
+                <button onClick={() => confirmDelete(item._id)}>
+                  <MdDelete />
+                </button>
               </div>
             </div>
-          </>
+          </div>
         ))}
       {home === true && (
         <div

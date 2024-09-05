@@ -33,13 +33,13 @@ const AllTasks = (home) => {
   return (
     <>
       <div>
-        <div className="w-full flex justify-end px-4 py-2">
+        <div className="w-full flex justify-end px-4 py-2 sticky top-0 bg-gray-800 z-1 border border-gray-500 rounded-md">
           <button
             onClick={() => {
               setOpenModal(true);
             }}
           >
-            <IoAddCircleSharp className="text-4xl text-gray-400 hover:text-gray-100 hover:scale-105  transition-all duration-300" />
+            <IoAddCircleSharp className="text-4xl text-gray-400 hover:text-gray-100 hover:scale-105 transition-all duration-300" />
           </button>
         </div>
         {data && (
